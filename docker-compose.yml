@@ -1,0 +1,36 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+volumes:
+  nextcloud:
+  db:
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8888:8080
+
+
+  app:
+      image: nextcloud
+      restart: always
+      ports:
+        - 9999:80
+      links:
+        - db
+      volumes:
+        - nextcloud:/var/www/html
+      environment:
+        - POSTGRES_DB=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=example
+        - POSTGRES_HOST=db
